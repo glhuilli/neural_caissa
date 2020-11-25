@@ -2,20 +2,24 @@ import logging
 
 from neural_caissa.ply.explore import explore_leaves
 
+
 logger = logging.getLogger(__name__)
 
 
-def computer_move(state, valuator) -> None:
+def computer_move(state, valuator) -> bool:
     """
-    Method to decide w
+    Method to decide which movements
     """
-    move = sorted(explore_leaves(state, valuator), key=lambda x: x[0], reverse=state.board.turn)
-    if len(move) == 0:
-        logger.error('computer_move: no moves to make')
-        return
+    sorted_movements = sorted(explore_leaves(state, valuator), key=lambda x: x[0], reverse=state.board.turn)
 
-    _log_moves(move)
-    state.board.push(move[0][1])
+    if len(sorted_movements) == 0:
+        logger.debug('No moves to make: GAME OVER?')
+        return True
+    _log_moves(sorted_movements)
+
+    # use the first movement as these are already sorted
+    state.board.push(sorted_movements[0][1])
+    return False
 
 
 def _log_moves(move, top_moves: int = 3) -> None:

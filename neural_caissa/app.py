@@ -1,13 +1,16 @@
-from flask import Flask, request
 import traceback
-import chess
+import logging
 
+import chess
+from flask import Flask, request
 
 from neural_caissa.board.state import State
 from neural_caissa.board.move import computer_move
 from neural_caissa.ply.valuator import ClassicValuator
 
 
+logging.basicConfig(filename='record.log', level=logging.DEBUG,
+                    format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 app = Flask(__name__)
 state = State()
 valuator = ClassicValuator()
@@ -15,6 +18,10 @@ valuator = ClassicValuator()
 
 @app.route("/move_coordinates")
 def move_coordinates():
+    """
+    If is not game_over, then find the computer move given the state
+    of the board and a valuator strategy.
+    """
     if not state.board.is_game_over():
         source = int(request.args.get('from', default=''))
         target = int(request.args.get('to', default=''))
@@ -23,8 +30,8 @@ def move_coordinates():
         # TODO: allow to pick promotion. Automatically promoting to Queen for now.
         move = state.board.san(chess.Move(source, target, promotion=chess.QUEEN if promotion else None))
 
-        if move is not None and move != "":
-
+        if move:
+            app.logger.debug(f'human moved (standard algebraic notation): {move}')
             try:
                 state.board.push_san(move)
                 computer_move(state, valuator)
@@ -60,4 +67,4 @@ def index():
 
 
 def main():
-    app.run(port=5000, debug=True)
+    app.run(port=9000, debug=True)

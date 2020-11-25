@@ -1,8 +1,11 @@
-import chess
 import time
+import logging
 
+import chess
 
 MAX_VALUE = 10_000
+
+logger = logging.getLogger(__name__)
 
 
 def explore_leaves(state, valuator):
@@ -12,8 +15,8 @@ def explore_leaves(state, valuator):
     c_val, ret = compute_minimax(state, valuator, 0, a=-MAX_VALUE, b=MAX_VALUE, big=True)
     eta = time.time() - start
 
-    print("%.2f -> %.2f: explored %d nodes in %.3f seconds %d/sec" %
-          (b_val, c_val, valuator.count, eta, int(valuator.count / eta)))
+    logger.debug(f"{b_val} -> {c_val}: explored {valuator.count} "
+                 f"nodes in {eta} seconds {int(valuator.count / eta)}/sec")
 
     return ret
 
@@ -22,7 +25,7 @@ def compute_minimax(state, valuator, depth, a, b, big=False):
     if depth >= 5 or state.board.is_game_over():
         return valuator(state)
 
-    # white is maximizing player
+    # TODO: verify if this still works when white is not the maximizing player
     turn = state.board.turn
     if turn == chess.WHITE:
         ret = -MAX_VALUE
@@ -32,13 +35,14 @@ def compute_minimax(state, valuator, depth, a, b, big=False):
     bret = []
 
     # TODO: Prune tree options with beam search
-    isort = []
+    #   https://medium.com/@dhartidhami/beam-search-in-seq2seq-model-7606d55b21a5
+    sorted_options = []
     for e in state.board.legal_moves:
         state.board.push(e)
-        isort.append((valuator(state), e))
+        sorted_options.append((valuator(state), e))
         state.board.pop()
 
-    move = sorted(isort, key=lambda x: x[0], reverse=state.board.turn)
+    move = sorted(sorted_options, key=lambda x: x[0], reverse=state.board.turn)
 
     # beam search beyond depth 3
     if depth >= 3:
@@ -46,7 +50,7 @@ def compute_minimax(state, valuator, depth, a, b, big=False):
 
     for e in [x[1] for x in move]:
         state.board.push(e)
-        tval, _ = compute_minimax(state, valuator, depth + 1, a, b)
+        tval = compute_minimax(state, valuator, depth + 1, a, b)
         state.board.pop()
         if big:
             bret.append((tval, e))
@@ -60,5 +64,6 @@ def compute_minimax(state, valuator, depth, a, b, big=False):
             b = min(b, ret)
             if a >= b:
                 break  # a cut-off
-
-    return ret, bret
+    if big:
+        return ret, bret
+    return ret

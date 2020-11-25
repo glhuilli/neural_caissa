@@ -23,9 +23,9 @@ class ClassicValuator:
     def reset(self):
         self.count = 0
 
-    # writing a simple value function based on pieces
-    # good ideas:
-    # https://en.wikipedia.org/wiki/Evaluation_function#In_chess
+    # TODO: Improve evaluation function
+    #    https://en.wikipedia.org/wiki/Evaluation_function#In_chess
+    #    https://www.chessprogramming.org/Evaluation
     def __call__(self, state):
         self.count += 1
         key = state.key()
@@ -35,9 +35,17 @@ class ClassicValuator:
 
     @staticmethod
     def value(state):
+        """
+        if game_over
+            return MAX_VALUE
+        else
+            value = SUM(piece in white)
+                        - SUM(piece in black)
+                        + 0.1 * TOTAL white legal moves
+                        - 0.1 * TOTAL black legal moves
+        """
         b = state.board
 
-        # game over values
         if b.is_game_over():
             if b.result() == "1-0":
                 return MAX_VALUE
@@ -48,19 +56,20 @@ class ClassicValuator:
 
         val = 0.0
 
-        # piece values
+        # SUM(piece in white) - SUM(piece in black)
         pm = state.board.piece_map()
         for x in pm:
-            tval = _VALUES[pm[x].piece_type]
+            tval = _VALUES.get(pm[x].piece_type)
             if pm[x].color == chess.WHITE:
                 val += tval
             else:
                 val -= tval
 
-        # add a number of legal moves term
+        # + 0.1 * TOTAL white legal moves - 0.1 * TOTAL black legal moves
         bak = b.turn
         b.turn = chess.WHITE
         val += 0.1 * b.legal_moves.count()
+
         b.turn = chess.BLACK
         val -= 0.1 * b.legal_moves.count()
         b.turn = bak

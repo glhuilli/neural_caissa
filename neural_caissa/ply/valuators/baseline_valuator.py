@@ -41,11 +41,15 @@ class BaselineValuator:
         else
             value = SUM(piece in white)
                         - SUM(piece in black)
+                        + White pieces mobility score
+                        - White pieces mobility score
 
         TODO: Improve evaluation function
            https://www.chessprogramming.org/Evaluation
 
-        From the computer's perspective (black by default), the lower the value the best is the move
+        Notes:
+            - From the computer's perspective (black by default), the lower the value the best is the move
+            - Mobility score is fundamental to make the computer play in a +1000 ELO score range
         """
         b = state.board
 
@@ -59,7 +63,8 @@ class BaselineValuator:
 
         score = 0.0
 
-        # King should be ignored
+        # Material score
+        # King should be ignored from this score
         pieces = [v for (k, v) in state.board.piece_map().items() if v.piece_type != chess.KING]
         for piece in pieces:
             piece_val = _VALUES.get(piece.piece_type)
@@ -68,13 +73,14 @@ class BaselineValuator:
             else:
                 score -= piece_val
 
-        # + 0.1 * TOTAL white legal moves - 0.1 * TOTAL black legal moves
-        # bak = b.turn
-        # b.turn = chess.WHITE
-        # val += 0.1 * b.legal_moves.count()
-        #
-        # b.turn = chess.BLACK
-        # val -= 0.1 * b.legal_moves.count()
-        # b.turn = bak
+        # Mobility score
+        # + 0.1 * number of white legal moves - 0.1 * number of black legal moves
+        turn_backup = b.turn
+        b.turn = chess.WHITE
+        score += 0.1 * b.legal_moves.count()
+
+        b.turn = chess.BLACK
+        score -= 0.1 * b.legal_moves.count()
+        b.turn = turn_backup
 
         return score

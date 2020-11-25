@@ -25,8 +25,9 @@ def explore_leaves(state, valuator):
 def compute_minimax(state, valuator, depth, alpha, beta):
     """
     Minimax algorithm:
+        https://towardsdatascience.com/create-ai-for-your-own-board-game-from-scratch-minimax-part-2-517e1c1e3362
 
-    Note that this version is using the alpha-beta
+    Note that this version is using the alpha-beta pruning
     """
     if depth >= _SEARCH_DEPTH or state.board.is_game_over():
         return valuator(state), []
@@ -59,6 +60,7 @@ def compute_minimax(state, valuator, depth, alpha, beta):
 
         movements.append((move_score, move))
 
+        # Aloha-beta optimization
         if turn == chess.WHITE:
             best_value = max(best_value, move_score)
             alpha = max(alpha, best_value)

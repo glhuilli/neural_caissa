@@ -15,7 +15,8 @@ class State(object):
 
     def serialize(self, turn: bool = False):
         """
-        Vector of 8x8x12 with 1 if piece k in position j * k, with j in [1, 64], k in [1, 12]
+        Vector of 8x8x12 with 1 if piece k in position j + positions * k,
+        with j in [1, 64], k in [1, 12].
 
         Note that Turn is False if it's white and True if it's black.
         """
@@ -26,5 +27,5 @@ class State(object):
                     pos = _POSITIONS - 1 - pos
                 board_piece = self.board.piece_at(pos)
                 if board_piece and piece == board_piece.symbol():
-                    x[idx * pos] = 1
+                    x[pos + idx * _POSITIONS] = 1
         return x

@@ -11,7 +11,7 @@ _OUTCOME = {'1/2-1/2': 0, '0-1': -1, '1-0': 1}
 
 
 def _generate_dataset(data_path, samples=None):
-    X, X_random, Y = [], [], []
+    X_origin, X_move, X_random, Y = [], [], [], []
     games_counter = 0
     for fn in os.listdir(data_path):
         pgn = open(os.path.join(data_path, fn))
@@ -29,6 +29,8 @@ def _generate_dataset(data_path, samples=None):
 
             board = game.board()
             for i, move in enumerate(game.mainline_moves()):
+                x_origin = State(board).serialize(turn=board.turn)
+
                 board.push(move)
                 x_move = State(board).serialize(turn=board.turn)
                 board.pop()
@@ -40,17 +42,19 @@ def _generate_dataset(data_path, samples=None):
                 board.pop()
                 board.push(move)
 
-                X.append(x_move)
+                X_origin.append(x_origin)
+                X_move.append(x_move)
                 X_random.append(x_random)
                 Y.append(_y)
             games_counter += 1
 
-    X = np.array(X)
+    X_origin = np.array(X_origin)
+    X_move = np.array(X_move)
     X_random = np.array(X_random)
     Y = np.array(Y)
-    return X, X_random, Y
+    return X_origin, X_move, X_random, Y
 
 
 if __name__ == "__main__":
-    X, X_random, Y = _generate_dataset('data/raw_data', 100_000)
-    np.savez('data/serialized_data/dataset_100k.npz', X, X_random, Y)
+    X_origin, X_move, X_random, Y = _generate_dataset('data/raw_data', 100_000)
+    np.savez('data/serialized_data/dataset_100k.npz', X_origin, X_move, X_random, Y)

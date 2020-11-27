@@ -1,16 +1,16 @@
-import traceback
 import logging
+import traceback
 
 import chess
 from flask import Flask, request
 
-from neural_caissa.ply.valuators.neural_valuator import NeuralValuator
+from neural_caissa.board.move import computer_move
 # from neural_caissa.ply.valuators.baseline_valuator import BaselineValuator
 from neural_caissa.board.state import State
-from neural_caissa.board.move import computer_move
+from neural_caissa.ply.valuators.neural_valuator import NeuralValuator
 
-
-logging.basicConfig(filename='record.log', level=logging.DEBUG,
+logging.basicConfig(filename='record.log',
+                    level=logging.DEBUG,
                     format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 app = Flask(__name__)
 state = State()
@@ -33,7 +33,8 @@ def move_coordinates():
         promotion = True if request.args.get('promotion', default='') == 'true' else False
 
         # TODO: allow to pick promotion. Automatically promoting to Queen for now.
-        move = state.board.san(chess.Move(source, target, promotion=chess.QUEEN if promotion else None))
+        move = state.board.san(
+            chess.Move(source, target, promotion=chess.QUEEN if promotion else None))
 
         if move:
             app.logger.debug(f'Human moved (standard algebraic notation): {move}')
@@ -48,31 +49,19 @@ def move_coordinates():
 
             app.logger.debug(f'Response state.board.fen(): {state.board.fen()}')
             if game_over:
-                response = app.response_class(
-                  response='game over',
-                  status=200
-                )
+                response = app.response_class(response='game over', status=200)
             else:
-                response = app.response_class(
-                  response=state.board.fen(),
-                  status=200
-                )
+                response = app.response_class(response=state.board.fen(), status=200)
             return response
 
-    response = app.response_class(
-        response='game over',
-        status=200
-    )
+    response = app.response_class(response='game over', status=200)
     return response
 
 
 @app.route("/newgame")
 def newgame():
     state.board.reset()
-    response = app.response_class(
-        response=state.board.fen(),
-        status=200
-    )
+    response = app.response_class(response=state.board.fen(), status=200)
     return response
 
 

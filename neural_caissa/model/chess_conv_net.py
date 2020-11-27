@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 _PIECES = 12
 _BOARD_DIM = 8
 _EPOCHS = 100
@@ -12,7 +11,6 @@ class ChessConvNet(nn.Module):
     """
     This is very similar to the neural net used by @GeoHot in the TwitchChess example.
     """
-
     def __init__(self):
         super(ChessConvNet, self).__init__()
 

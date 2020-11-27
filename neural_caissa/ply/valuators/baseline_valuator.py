@@ -18,7 +18,6 @@ _VALUES = {
 
 
 class BaselineValuator(Valuator):
-
     def __init__(self):
         self.memory = {}
         self.count = 0
@@ -67,7 +66,7 @@ class BaselineValuator(Valuator):
         # King should be ignored from this score
         pieces = [v for (k, v) in state.board.piece_map().items() if v.piece_type != chess.KING]
         for piece in pieces:
-            piece_val = _VALUES.get(piece.piece_type)
+            piece_val = _VALUES.get(piece.piece_type, 0.0)
             if piece.color == chess.WHITE:
                 score += piece_val
             else:

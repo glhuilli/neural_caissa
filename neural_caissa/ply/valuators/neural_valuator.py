@@ -1,8 +1,8 @@
 import torch
 
+from neural_caissa.board.state import State
 from neural_caissa.model.chess_conv_net import ChessConvNet
 from neural_caissa.ply.valuators.valuator import Valuator
-from neural_caissa.board.state import State
 
 
 class NeuralValuator(Valuator):

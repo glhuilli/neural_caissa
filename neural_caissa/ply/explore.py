@@ -1,8 +1,7 @@
-import time
 import logging
+import time
 
 import chess
-
 
 MAX_VALUE = float('inf')
 _SEARCH_DEPTH = 2
@@ -15,13 +14,18 @@ def explore_leaves(state, valuator):
     start = time.time()
     valuator.reset()
     current_score = valuator(state)
-    movement_score, movements = compute_minimax(state, valuator, 0, alpha=-MAX_VALUE, beta=MAX_VALUE)
+    movement_score, movements = compute_minimax(state,
+                                                valuator,
+                                                0,
+                                                alpha=-MAX_VALUE,
+                                                beta=MAX_VALUE)
     eta = time.time() - start
 
     valuator_type = type(valuator).__name__
-    if valuator_type  == 'BaselineValuator':
-        logger.debug(f"Score transition: {current_score} -> {movement_score}\n "
-                 f"explored {valuator.count} nodes in {eta} seconds {int(valuator.count / eta)}/sec")
+    if valuator_type == 'BaselineValuator':
+        logger.debug(
+            f"Score transition: {current_score} -> {movement_score}\n "
+            f"explored {valuator.count} nodes in {eta} seconds {int(valuator.count / eta)}/sec")
     elif valuator_type == 'NeuralValuator':
         logger.debug(f"Score transition: {current_score} -> {movement_score} ({eta} seconds)")
 
@@ -55,12 +59,12 @@ def compute_minimax(state, valuator, depth, alpha, beta):
         state.board.pop()
 
     moves = sorted(options, key=lambda x: x[0], reverse=state.board.turn)
-    if depth >= _SEARCH_DEPTH-1:  # TODO: improve pruning strategy, this is shameful
+    if depth >= _SEARCH_DEPTH - 1:  # TODO: improve pruning strategy, this is shameful
         moves = moves[:_MAX_MOVES]
 
     for move in [x[1] for x in moves]:
         state.board.push(move)
-        move_score, _ = compute_minimax(state, valuator, depth+1, alpha, beta)
+        move_score, _ = compute_minimax(state, valuator, depth + 1, alpha, beta)
 
         state.board.pop()
 

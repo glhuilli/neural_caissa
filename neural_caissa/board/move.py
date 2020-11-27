@@ -2,7 +2,6 @@ import logging
 
 from neural_caissa.ply.explore import explore_leaves
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -10,7 +9,9 @@ def computer_move(state, valuator) -> bool:
     """
     Method to decide which movements
     """
-    sorted_movements = sorted(explore_leaves(state, valuator), key=lambda x: x[0], reverse=state.board.turn)
+    sorted_movements = sorted(explore_leaves(state, valuator),
+                              key=lambda x: x[0],
+                              reverse=state.board.turn)
 
     if len(sorted_movements) == 0:
         logger.debug('No moves to make: GAME OVER?')

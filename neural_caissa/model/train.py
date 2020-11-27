@@ -1,13 +1,11 @@
 import click
-
-from tqdm import tqdm
 import torch
 import torch.nn as nn
 from torch import optim
+from tqdm import tqdm
 
 from neural_caissa.data.load import ChessDataset
 from neural_caissa.model.chess_conv_net import ChessConvNet
-
 
 _PIECES = 12
 _BOARD_DIM = 8
@@ -15,7 +13,9 @@ _EPOCHS = 100
 
 
 @click.command()
-@click.option('--input_data_file', default='data/serialized_data/dataset_1k.npz', help='Input data file.')
+@click.option('--input_data_file',
+              default='data/serialized_data/dataset_1k.npz',
+              help='Input data file.')
 @click.option('--output_model', default='nets/neural_score.pth', help='Output model file.')
 def main(input_data_file, output_model):
     """

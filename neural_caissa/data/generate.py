@@ -28,17 +28,17 @@ def _generate_dataset(data_path, samples=None):
             _y = _OUTCOME.get(result)
 
             board = game.board()
-            for i, move in enumerate(game.mainline_moves()):
-                x_origin = State(board).serialize(turn=board.turn)
+            for move in game.mainline_moves():
+                x_origin = State(board).serialize_conv(turn=board.turn)
 
                 board.push(move)
-                x_move = State(board).serialize(turn=board.turn)
+                x_move = State(board).serialize_conv(turn=board.turn)
                 board.pop()
 
                 legal_moves = list(board.legal_moves)
                 random_move = random.choice(legal_moves)
                 board.push(random_move)
-                x_random = State(board).serialize(turn=board.turn)
+                x_random = State(board).serialize_conv(turn=board.turn)
                 board.pop()
                 board.push(move)
 
@@ -58,3 +58,4 @@ def _generate_dataset(data_path, samples=None):
 if __name__ == "__main__":
     X_origin, X_move, X_random, Y = _generate_dataset('data/raw_data', 100_000)
     np.savez('data/serialized_data/dataset_100k.npz', X_origin, X_move, X_random, Y)
+    print("saved", X_origin.shape, X_move.shape, X_random.shape, Y.shape)

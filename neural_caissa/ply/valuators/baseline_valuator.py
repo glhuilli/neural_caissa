@@ -3,7 +3,7 @@ import logging
 import chess
 
 from neural_caissa.ply.explore import MAX_VALUE
-
+from neural_caissa.ply.valuators.valuator import Valuator
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ _VALUES = {
 }
 
 
-class BaselineValuator:
+class BaselineValuator(Valuator):
 
     def __init__(self):
         self.memory = {}
@@ -30,11 +30,11 @@ class BaselineValuator:
         self.count += 1
         key = state.key()
         if key not in self.memory:
-            self.memory[key] = self.value(state)
+            self.memory[key] = self._value(state)
         return self.memory[key]
 
     @staticmethod
-    def value(state):
+    def _value(state):
         """
         if game_over
             return MAX_VALUE

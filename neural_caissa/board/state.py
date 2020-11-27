@@ -13,6 +13,9 @@ class State(object):
         else:
             self.board = board
 
+    def key(self):
+        return self.board.board_fen(), self.board.turn, self.board.castling_rights, self.board.ep_square
+
     def serialize(self, turn: bool = False):
         """
         Vector of 768 (= 8*8*12) with 1 if piece k in position j + positions * k,

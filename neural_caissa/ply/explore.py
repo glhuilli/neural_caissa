@@ -17,8 +17,14 @@ def explore_leaves(state, valuator):
     current_score = valuator(state)
     movement_score, movements = compute_minimax(state, valuator, 0, alpha=-MAX_VALUE, beta=MAX_VALUE)
     eta = time.time() - start
-    logger.debug(f"Score transition: {current_score} -> {movement_score}\n "
+
+    valuator_type = type(valuator).__name__
+    if valuator_type  == 'BaselineValuator':
+        logger.debug(f"Score transition: {current_score} -> {movement_score}\n "
                  f"explored {valuator.count} nodes in {eta} seconds {int(valuator.count / eta)}/sec")
+    elif valuator_type == 'NeuralValuator':
+        logger.debug(f"Score transition: {current_score} -> {movement_score} ({eta} seconds)")
+
     return movements
 
 

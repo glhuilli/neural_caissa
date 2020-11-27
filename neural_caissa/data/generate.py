@@ -57,5 +57,5 @@ def _generate_dataset(data_path, samples=None):
 
 if __name__ == "__main__":
     X_origin, X_move, X_random, Y = _generate_dataset('data/raw_data', 100_000)
-    np.savez('data/serialized_data/dataset_100k.npz', X_origin, X_move, X_random, Y)
+    np.savez('data/serialized_data/dataset_1k.npz', X_origin, X_move, X_random, Y)
     print("saved", X_origin.shape, X_move.shape, X_random.shape, Y.shape)

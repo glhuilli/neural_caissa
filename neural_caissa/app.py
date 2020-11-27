@@ -4,7 +4,8 @@ import logging
 import chess
 from flask import Flask, request
 
-from neural_caissa.ply.valuators.baseline_valuator import BaselineValuator
+from neural_caissa.ply.valuators.neural_valuator import NeuralValuator
+# from neural_caissa.ply.valuators.baseline_valuator import BaselineValuator
 from neural_caissa.board.state import State
 from neural_caissa.board.move import computer_move
 
@@ -13,7 +14,10 @@ logging.basicConfig(filename='record.log', level=logging.DEBUG,
                     format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 app = Flask(__name__)
 state = State()
-valuator = BaselineValuator()
+
+# TODO: Add option in UI to change Valuator
+# valuator = BaselineValuator()
+valuator = NeuralValuator('nets/neural_score.pth')
 
 
 @app.route("/move_coordinates")

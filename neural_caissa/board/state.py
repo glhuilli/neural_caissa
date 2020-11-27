@@ -1,4 +1,9 @@
 import chess
+import numpy as np
+
+
+_POSITIONS = 64
+_PIECES = 'PNBRQKpnbrqk'
 
 
 class State(object):
@@ -8,8 +13,18 @@ class State(object):
         else:
             self.board = board
 
-    def key(self):
-        return self.board.board_fen(), self.board.turn, self.board.castling_rights, self.board.ep_square
+    def serialize(self, turn: bool = False):
+        """
+        Vector of 8x8x12 with 1 if piece k in position j * k, with j in [1, 64], k in [1, 12]
 
-    def edges(self):
-        return list(self.board.legal_moves)
+        Note that Turn is False if it's white and True if it's black.
+        """
+        x = np.zeros(_POSITIONS * len(_PIECES), dtype=np.int8)
+        for idx, piece in enumerate(_PIECES):
+            for pos in range(_POSITIONS):
+                if turn:
+                    pos = _POSITIONS - 1 - pos
+                board_piece = self.board.piece_at(pos)
+                if board_piece and piece == board_piece.symbol():
+                    x[idx * pos] = 1
+        return x

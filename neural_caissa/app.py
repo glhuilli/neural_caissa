@@ -17,7 +17,7 @@ state = State()
 
 # TODO: Add option in UI to change Valuator
 # valuator = BaselineValuator()
-valuator = NeuralValuator('nets/neural_score.pth')
+valuator = NeuralValuator('nets/neural_score_100.pth')
 
 
 @app.route("/move_coordinates")

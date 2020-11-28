@@ -13,6 +13,17 @@
 <body style="font-size: 20px">
 
 <button onclick="newGame()">new game</button><br/>
+
+<form onselect="pickValuator()">
+  <label for="bots">Choose a Chess bot:</label>
+  <select name="bots" id="bots">
+    <option value="neuralcaissa1k">Neural Caissa 1k</option>
+    <option value="neuralcaissa100k">Neural Caissa 100k</option>
+    <option value="baseline">Baseline</option>
+  </select>
+  <input type="submit" value="Submit">
+</form>
+
 <div id="board" style="width: 600px"></div>
 <p></p>
 
@@ -50,6 +61,13 @@ function onDrop(source, target, piece) {
 function newGame() {
   $.get('/newgame', function(r) {
     document.querySelector('p').innerText = '';
+    board.position(r);
+  });
+}
+
+function pickValuator() {
+  $.get('/valuator', function(r) {
+
     board.position(r);
   });
 }

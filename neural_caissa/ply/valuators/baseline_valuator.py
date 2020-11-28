@@ -40,8 +40,8 @@ class BaselineValuator(Valuator):
         else
             value = SUM(piece in white)
                         - SUM(piece in black)
-                        + White pieces mobility score
-                        - White pieces mobility score
+                        + 0.1 * (White pieces mobility score)
+                        - 0.1 * (Black pieces mobility score)
 
         TODO: Improve evaluation function
            https://www.chessprogramming.org/Evaluation
@@ -49,6 +49,7 @@ class BaselineValuator(Valuator):
         Notes:
             - From the computer's perspective (black by default), the lower the value the best is the move
             - Mobility score is fundamental to make the computer play in a +1000 ELO score range
+            - Mobility weight of 0.1 is based on what's discussed in https://www.chessprogramming.org/Evaluation
         """
         b = state.board
 

@@ -7,9 +7,11 @@ from tqdm import tqdm
 from neural_caissa.data.load import ChessDataset
 from neural_caissa.model.chess_conv_net import ChessConvNet
 
+
 _PIECES = 12
 _BOARD_DIM = 8
 _EPOCHS = 100
+_BATCH_SIZE = 256
 
 
 @click.command()
@@ -23,7 +25,7 @@ def main(input_data_file, output_model):
          https://pytorch.org/tutorials/beginner/pytorch_with_examples.html
     """
     chess_dataset = ChessDataset(input_data_file)
-    train_loader = torch.utils.data.DataLoader(chess_dataset, batch_size=256, shuffle=True)
+    train_loader = torch.utils.data.DataLoader(chess_dataset, batch_size=_BATCH_SIZE, shuffle=True)
 
     model = ChessConvNet()
     optimizer = optim.Adam(model.parameters())

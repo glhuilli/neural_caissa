@@ -70,16 +70,16 @@ def compute_minimax(state, valuator, depth, alpha, beta):
 
         movements.append((move_score, move))
 
-        # Aloha-beta optimization
+        # Alpha-beta optimization
         if turn == chess.WHITE:
             best_value = max(best_value, move_score)
             alpha = max(alpha, best_value)
             if alpha >= beta:
-                break  # beta cut-off
+                break
         else:
             best_value = min(best_value, move_score)
             beta = min(beta, best_value)
             if alpha >= beta:
-                break  # alpha cut-off
+                break
 
     return best_value, movements

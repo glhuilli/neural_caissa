@@ -1,9 +1,16 @@
 import chess
 import numpy as np
 
+from neural_caissa.ply.valuators.baseline_valuator import BaselineValuator
+from neural_caissa.ply.valuators.neural_valuator import NeuralValuator
+
 _BOARD_DIM = 8
 _POSITIONS = 64
 _PIECES = 'PNBRQKpnbrqk'
+_VALUATORS = {
+    'BaselineValuator': BaselineValuator,
+    'NeuralValuator': NeuralValuator
+}
 
 
 class State(object):
@@ -12,6 +19,10 @@ class State(object):
             self.board = chess.Board()
         else:
             self.board = board
+        self.valuator = self._init_valuator('BaselineValuator')
+
+    def set_valuator(self, valuator_name, model_file: str = None):
+        self.valuator = self._init_valuator(valuator_name, model_file)
 
     def key(self):
         return self.board.board_fen(
@@ -52,3 +63,9 @@ class State(object):
             piece_state = piece_state.reshape(8, 8)
             x[idx] = piece_state
         return x
+
+    def _init_valuator(self, valuator_name, model_file=None):
+        if valuator_name == 'BaselineValuator':
+            return _VALUATORS[valuator_name]()
+        else:
+            return _VALUATORS[valuator_name](model_file)

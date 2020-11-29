@@ -5,11 +5,11 @@ from neural_caissa.ply.explore import explore_leaves
 logger = logging.getLogger(__name__)
 
 
-def computer_move(state, valuator) -> bool:
+def computer_move(state) -> bool:
     """
     Method to decide which movements
     """
-    sorted_movements = sorted(explore_leaves(state, valuator),
+    sorted_movements = sorted(explore_leaves(state),
                               key=lambda x: x[0],
                               reverse=state.board.turn)
 

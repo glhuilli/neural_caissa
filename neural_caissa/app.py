@@ -5,19 +5,21 @@ import chess
 from flask import Flask, request
 
 from neural_caissa.board.move import computer_move
-# from neural_caissa.ply.valuators.baseline_valuator import BaselineValuator
 from neural_caissa.board.state import State
-from neural_caissa.ply.valuators.neural_valuator import NeuralValuator
+
+
+_VALUATOR_MODEL_FILE_MAPPING = {
+    'neuralcaissa100k': {'valuator': 'NeuralValuator', 'model_file': 'nets/neural_score_100.pth'},
+    'neuralcaissa1k': {'valuator': 'NeuralValuator', 'model_file': 'nets/neural_score.pth'},
+    'baseline': {'valuator': 'BaselineValuator'}
+}
 
 logging.basicConfig(filename='record.log',
                     level=logging.DEBUG,
                     format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 app = Flask(__name__)
-state = State()
 
-# TODO: Add option in UI to change Valuator
-# valuator = BaselineValuator()
-valuator = NeuralValuator('nets/neural_score.pth')
+state = State()
 
 
 @app.route("/move_coordinates")
@@ -41,7 +43,7 @@ def move_coordinates():
 
             try:
                 state.board.push_san(move)
-                game_over = computer_move(state, valuator)
+                game_over = computer_move(state)
             except ValueError:
                 app.logger.error('Human tried to do an illegal move!')
             except Exception:
@@ -61,6 +63,16 @@ def move_coordinates():
 @app.route("/newgame")
 def newgame():
     state.board.reset()
+    state.set_valuator('BaselineValuator')
+    response = app.response_class(response=state.board.fen(), status=200)
+    return response
+
+
+@app.route("/valuator")
+def valuator():
+    mapping = _VALUATOR_MODEL_FILE_MAPPING.get(request.args.get('valuator', 'baseline'))
+    state.board.reset()
+    state.set_valuator(mapping['valuator'], mapping.get('model_file', None))
     response = app.response_class(response=state.board.fen(), status=200)
     return response
 

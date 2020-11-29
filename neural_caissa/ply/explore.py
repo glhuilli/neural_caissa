@@ -10,8 +10,9 @@ _MAX_MOVES = 10
 logger = logging.getLogger(__name__)
 
 
-def explore_leaves(state, valuator):
+def explore_leaves(state):
     start = time.time()
+    valuator = state.valuator
     valuator.reset()
     current_score = valuator(state)
     movement_score, movements = compute_minimax(state,

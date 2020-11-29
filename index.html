@@ -12,19 +12,13 @@
 </head>
 <body style="font-size: 20px">
 
-<button onclick="newGame()">new game</button><br/>
-
-<form onselect="pickValuator()">
-  <label for="bots">Choose a Chess bot:</label>
-  <select name="bots" id="bots">
-    <option value="neuralcaissa1k">Neural Caissa 1k</option>
-    <option value="neuralcaissa100k">Neural Caissa 100k</option>
-    <option value="baseline">Baseline</option>
-  </select>
-  <input type="submit" value="Submit">
-</form>
-
+<button onclick="newGame()">new game</button>
 <div id="board" style="width: 600px"></div>
+  <select id="bots">
+    <option value="baseline">Baseline Heuristic</option>
+    <option value="neuralcaissa1k">Neural Caissa Model T1000 (trained with 1k games)</option>
+    <option value="neuralcaissa100k">Neural Caissa Model T100k (trained with 100k games)</option>
+  </select><input type="button" id="button" value="button" style="visibility:hidden"/>
 <p></p>
 
 
@@ -40,6 +34,29 @@ var lines = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4, "f": 5, "g": 6, "h": 7};
 function get_square(sq) {
   return 8*(parseInt(sq.charAt(1)) - 1) + lines[sq.charAt(0)];
 }
+
+var sel = document.getElementById('bots'),
+    button = document.getElementById('button');
+
+button.addEventListener('click', function (e) {
+    sel.options[1].selected = true;
+
+    // firing the event properly according to StackOverflow
+    // http://stackoverflow.com/questions/2856513/how-can-i-trigger-an-onchange-event-manually
+    if ("createEvent" in document) {
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("change", false, true);
+        sel.dispatchEvent(evt);
+    }
+    else {
+        sel.fireEvent("onchange");
+    }
+});
+
+sel.addEventListener('change', function (e) {
+    alert('Bot changed to ' + sel.value);
+    pickValuator(sel.value);
+});
 
 
 function onDrop(source, target, piece) {
@@ -65,9 +82,10 @@ function newGame() {
   });
 }
 
-function pickValuator() {
-  $.get('/valuator', function(r) {
-
+function pickValuator(valuator) {
+  $.get('/valuator', {'valuator': valuator}, function(r) {
+    console.log(r)
+    document.querySelector('p').innerText = '';
     board.position(r);
   });
 }

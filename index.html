@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<title>Ah Heh Drehs - NeuralCaissa</title>
+<title>NeuralCaissa</title>
 
 <link rel="stylesheet" type="text/css" href="static/chessboard.min.css">
 
@@ -35,6 +35,8 @@ function get_square(sq) {
   return 8*(parseInt(sq.charAt(1)) - 1) + lines[sq.charAt(0)];
 }
 
+// Using the 2nd option from this post in StackOverflow:
+// https://stackoverflow.com/questions/19329978/change-selects-option-and-trigger-events-with-javascript
 var sel = document.getElementById('bots'),
     button = document.getElementById('button');
 

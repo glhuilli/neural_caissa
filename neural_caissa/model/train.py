@@ -7,7 +7,6 @@ from tqdm import tqdm
 from neural_caissa.data.load import ChessDataset
 from neural_caissa.model.chess_conv_net import ChessConvNet
 
-
 _PIECES = 12
 _BOARD_DIM = 8
 _EPOCHS = 100

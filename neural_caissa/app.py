@@ -7,11 +7,18 @@ from flask import Flask, request
 from neural_caissa.board.move import computer_move
 from neural_caissa.board.state import State
 
-
 _VALUATOR_MODEL_FILE_MAPPING = {
-    'neuralcaissa100k': {'valuator': 'NeuralValuator', 'model_file': 'nets/neural_score_100.pth'},
-    'neuralcaissa1k': {'valuator': 'NeuralValuator', 'model_file': 'nets/neural_score.pth'},
-    'baseline': {'valuator': 'BaselineValuator'}
+    'neuralcaissa100k': {
+        'valuator': 'NeuralValuator',
+        'model_file': 'nets/neural_score_100.pth'
+    },
+    'neuralcaissa1k': {
+        'valuator': 'NeuralValuator',
+        'model_file': 'nets/neural_score.pth'
+    },
+    'baseline': {
+        'valuator': 'BaselineValuator'
+    }
 }
 
 logging.basicConfig(filename='record.log',

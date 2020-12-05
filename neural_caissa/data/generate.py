@@ -8,7 +8,6 @@ from tqdm import tqdm
 
 from neural_caissa.board.state import State
 
-
 _OUTCOME = {'1/2-1/2': 0, '0-1': -1, '1-0': 1}
 
 
@@ -77,7 +76,9 @@ def _get_next_and_random_moves(board, move):
 @click.option('--input_data_file',
               default='data/raw_data/1k_caissadb_data.pgn',
               help='Input PGN data file.')
-@click.option('--output_data', default='data/serialized_data/dataset_1k.npz', help='Output serialized data file.')
+@click.option('--output_data',
+              default='data/serialized_data/dataset_1k.npz',
+              help='Output serialized data file.')
 @click.option('--full', default=False, help='Add random move and next move to data serialization.')
 @click.option('--samples', default=1_000, help='Number of games to serialize from ')
 def main(input_data_file, output_data, samples, full):

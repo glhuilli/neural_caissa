@@ -7,10 +7,7 @@ from neural_caissa.ply.valuators.neural_valuator import NeuralValuator
 _BOARD_DIM = 8
 _POSITIONS = 64
 _PIECES = 'PNBRQKpnbrqk'
-_VALUATORS = {
-    'BaselineValuator': BaselineValuator,
-    'NeuralValuator': NeuralValuator
-}
+_VALUATORS = {'BaselineValuator': BaselineValuator, 'NeuralValuator': NeuralValuator}
 
 
 class State(object):

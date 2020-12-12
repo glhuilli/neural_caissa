@@ -44,4 +44,4 @@ List of TODOs
 3. Implement a `MuZero` style strategy to learn how to play chess from the game itself, instead of relying on the minimax backtracking algorithm to find the best next move (maybe something like [this](https://medium.com/applied-data-science/how-to-build-your-own-muzero-in-python-f77d5718061a))   
 4. Improve the `ChessConvNet` structure so it's better suited for Chess. Currently is very simple stack of ConvNets, and most likely not using the right representation. I think that it can be particularly improved by using a different loss function (I personally like the loss function proposed by @erikbern in his [deep-pink implementation](https://github.com/erikbern/deep-pink)).  
 5. Improve the serialization strategy as the current one is extremely simple.
-6. Update the training script so it can be run in [Google Collab](https://pytorch.org/tutorials/beginner/colab.html) (or somewhere that it can use the GPU for training). 
+6. ~~Update the training script so it can be run in [Google Collab](https://pytorch.org/tutorials/beginner/colab.html) (or somewhere that it can use the GPU for training)~~. 

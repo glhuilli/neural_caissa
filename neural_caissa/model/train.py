@@ -18,7 +18,9 @@ _BATCH_SIZE = 256
               default='data/serialized_data/dataset_1k.npz',
               help='Input data file.')
 @click.option('--output_model', default='nets/neural_score.pth', help='Output model file.')
-def main(input_data_file, output_model):
+@click.option('--checkpoint_path', default='', help='Model checkpoint.')
+@click.option('--checkpoint/--no-checkpoint', ' /-C', default=False)
+def main(input_data_file, output_model, checkpoint_path, checkpoint):
     """
     Following this basic example:
          https://pytorch.org/tutorials/beginner/pytorch_with_examples.html
@@ -29,13 +31,22 @@ def main(input_data_file, output_model):
     model = ChessConvNet()
     optimizer = optim.Adam(model.parameters())
     loss_function = nn.MSELoss()
+    recorded_epoch = 0
+
+    if checkpoint_path and checkpoint:
+        checkpnt = torch.load(checkpoint_path)
+        model.load_state_dict(checkpnt['model_state_dict'])
+        optimizer.load_state_dict(checkpnt['optimizer_state_dict'])
+        recorded_epoch = checkpnt['epoch']
+        recorded_loss = checkpnt['loss']
+        print(f'recorded current loss: {recorded_loss}')
 
     model.train()
 
-    for epoch in tqdm(range(_EPOCHS)):
+    for epoch in tqdm(range(_EPOCHS-recorded_epoch)):
         all_loss = 0
         num_loss = 0
-        for batch_idx, (data_origin, data_move, data_random, target) in enumerate(train_loader):
+        for batch_idx, (data_origin, data_move, data_random, target) in tqdm(enumerate(train_loader)):
             target = target.unsqueeze(-1)
             data_origin = data_origin.float()
 
@@ -52,10 +63,17 @@ def main(input_data_file, output_model):
             all_loss += loss.item()
             num_loss += 1
 
-        if epoch % 10 == 0:
-            print("%3d: %f" % (epoch, all_loss / num_loss))
+        current_loss = all_loss / num_loss
+        print("%3d: %f" % (epoch, current_loss))
 
         torch.save(model.state_dict(), output_model)
+        if checkpoint_path:
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': current_loss,
+                }, checkpoint_path)
 
 
 if __name__ == "__main__":

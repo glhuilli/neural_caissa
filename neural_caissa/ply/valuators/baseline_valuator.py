@@ -47,19 +47,19 @@ class BaselineValuator(Valuator):
            https://www.chessprogramming.org/Evaluation
 
         Notes:
-            - From the computer's perspective (black by default), the lower the value the best is the move
-            - Mobility score is fundamental to make the computer play in a +1000 ELO score range
-            - Mobility weight of 0.1 is based on what's discussed in https://www.chessprogramming.org/Evaluation
+            - From the computer's perspective (black by default), the lower
+                the value the best is the move
+            - Mobility score is fundamental to make the computer play in a
+                +1000 ELO score range
+            - Mobility weight of 0.1 is based on what's discussed in
+                https://www.chessprogramming.org/Evaluation
         """
         b = state.board
 
         if b.is_game_over():
             if b.result() == '1-0':
                 return MAX_VALUE
-            elif b.result() == '0-1':
-                return -MAX_VALUE
-            else:
-                raise Exception
+            return -MAX_VALUE
 
         score = 0.0
 

@@ -5,5 +5,12 @@
 # W1203: Use % formatting in logging functions and pass the % parameters as arguments (logging-fstring-interpolation)
 # C0103: Constant name doesn't conform to UPPER_CASE naming style (invalid-name)
 # W0511: Used when a warning note as FIXME or XXX is detected
+# E1120: No value for argument
+# W1202: Use % formatting in logging functions
+# E1101: Method 'logger' has no 'debug'/'error'
+# R0902: Too many instance attributes
+# R0914: Too many local variables
+# W0703: Catching too general exception Exception
+# E1102: torch.tensor is not callable
 
-disable=R0903,C0111,W1203,C0103,W0511
+disable=R0903,C0111,W1203,C0103,W0511,E1120,W1202,E1101,R0902,R0914,W0703,E1102

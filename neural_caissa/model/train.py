@@ -46,8 +46,7 @@ def main(input_data_file, output_model, checkpoint_path, checkpoint):
     for epoch in tqdm(range(_EPOCHS - recorded_epoch)):
         all_loss = 0
         num_loss = 0
-        for batch_idx, (data_origin, data_move, data_random,
-                        target) in tqdm(enumerate(train_loader)):
+        for data_origin, _, _, target in tqdm(train_loader):
             target = target.unsqueeze(-1)
             data_origin = data_origin.float()
 

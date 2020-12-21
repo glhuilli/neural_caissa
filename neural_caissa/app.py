@@ -39,7 +39,7 @@ def move_coordinates():
     if not state.board.is_game_over():
         source = int(request.args.get('from', default=''))
         target = int(request.args.get('to', default=''))
-        promotion = True if request.args.get('promotion', default='') == 'true' else False
+        promotion = bool(request.args.get('promotion', default='') == 'true')
 
         # TODO: allow to pick promotion. Automatically promoting to Queen for now.
         move = state.board.san(

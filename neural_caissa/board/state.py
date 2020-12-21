@@ -10,7 +10,7 @@ _PIECES = 'PNBRQKpnbrqk'
 _VALUATORS = {'BaselineValuator': BaselineValuator, 'NeuralValuator': NeuralValuator}
 
 
-class State(object):
+class State:
     def __init__(self, board=None):
         if board is None:
             self.board = chess.Board()
@@ -61,8 +61,8 @@ class State(object):
             x[idx] = piece_state
         return x
 
-    def _init_valuator(self, valuator_name, model_file=None):
+    @staticmethod
+    def _init_valuator(valuator_name, model_file=None):
         if valuator_name == 'BaselineValuator':
             return _VALUATORS[valuator_name]()
-        else:
-            return _VALUATORS[valuator_name](model_file)
+        return _VALUATORS[valuator_name](model_file)

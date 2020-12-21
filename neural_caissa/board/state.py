@@ -27,8 +27,8 @@ class State:
 
     def serialize(self, turn: bool = False):
         """
-        Vector of 768 (= 8*8*12) with 1 if piece k in position j + positions * k,
-        with j in [1, 64], k in [1, 12], else 0.
+        Tensor of 12 x 64 dimensions (=12 x (8 x 8)) with 1 if piece k in position i,
+        with i in [1, 64], else 0.
 
         Note that Turn is False if it's white and True if it's black.
         """

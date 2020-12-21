@@ -43,10 +43,10 @@ def main(input_data_file, output_model, checkpoint_path, checkpoint):
 
     model.train()
 
-    for epoch in tqdm(range(_EPOCHS-recorded_epoch)):
+    for epoch in tqdm(range(_EPOCHS - recorded_epoch)):
         all_loss = 0
         num_loss = 0
-        for batch_idx, (data_origin, data_move, data_random, target) in tqdm(enumerate(train_loader)):
+        for data_origin, _, _, target in tqdm(train_loader):
             target = target.unsqueeze(-1)
             data_origin = data_origin.float()
 
@@ -68,11 +68,12 @@ def main(input_data_file, output_model, checkpoint_path, checkpoint):
 
         torch.save(model.state_dict(), output_model)
         if checkpoint_path:
-            torch.save({
-                'epoch': epoch,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'loss': current_loss,
+            torch.save(
+                {
+                    'epoch': epoch,
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'loss': current_loss,
                 }, checkpoint_path)
 
 

@@ -34,7 +34,26 @@ tail -f record.log
 How does it work
 -----
 
-TBA.
+In a nutshell, the current version works as follows:
+
+1. An initial board `state` is generated and `valuator` strategy is set. The `valuator` will be used to compute the score for potential next states for the board.
+2. Using a minimax algorithm with limited depth and alpha-beta pruning, a set of potential next states are explored. The `valuator` is used to compute the score for each state.  
+3. The next state that has higher score, is used as the next move. 
+
+The current `valuators` available are two: a baseline and a neural `valuator`. The baseline `valuator` is fairly simple, but works surprisingly ok. The current formula implemented is the following: 
+
+```
+value = SUM(piece in white)
+        - SUM(piece in black)
+        + 0.1 * (White pieces mobility score)
+        - 0.1 * (Black pieces mobility score)
+```
+
+The neural `valuator` is a scoring function trained using a deep learning. This function is built using a series of ConvNets, which are then mapped into a linear representation and evaluated using a `tanh` into [-1, +1], using Adam as optimizer and MSE as the loss function, mini-batches of size 256, and 100 epochs to train.  
+
+The data used to train this model is a large collection of games, where the features are determined by a very simple and naive serialization strategy: each state is represented as a Tensor of with 768 binary variables (= 12 x (8 x 8)). For each piece k (k \in [1, 12]), there's a 1 if piece k in position i else 0 (i \in [1, 64]). The target label is either +1 or -1 depending on whether the player that is moving in given state won the game or not. 
+
+The data used to train this model was downloaded from [caissabase](http://caissabase.co.uk/). 
 
 
 List of TODOs 
@@ -45,3 +64,6 @@ List of TODOs
 4. Improve the `ChessConvNet` structure so it's better suited for Chess. Currently is very simple stack of ConvNets, and most likely not using the right representation. I think that it can be particularly improved by using a different loss function (I personally like the loss function proposed by @erikbern in his [deep-pink implementation](https://github.com/erikbern/deep-pink)).  
 5. Improve the serialization strategy as the current one is extremely simple.
 6. ~~Update the training script so it can be run in [Google Collab](https://pytorch.org/tutorials/beginner/colab.html) (or somewhere that it can use the GPU for training)~~. 
+7. Improve minimax algorithm moving from depth-limited search to probability-limited search (similar to what was done in [Giraffe](https://arxiv.org/pdf/1509.01549.pdf)). Note that in the Giraffe paper there's a pretty interesting serialization strategy that accounts for ~300 features for a given board state. 
+8. Maybe some simple Q-learning version might also be interesting to explore (Apparently in [this Kaggle](https://www.kaggle.com/arjanso/reinforcement-learning-chess-3-q-networks#Reinforcement-Learning-Chess) set of scripts there's something that coudl be useful). 
+9. Consider using the Piece Square Tables used in [Sunfish](https://github.com/thomasahle/sunfish) (described also in this [blog post](https://dev.to/zeyu2001/build-a-simple-chess-ai-in-javascript-18eg)).

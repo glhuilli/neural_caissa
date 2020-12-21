@@ -10,7 +10,7 @@ _PIECES = 'PNBRQKpnbrqk'
 _VALUATORS = {'BaselineValuator': BaselineValuator, 'NeuralValuator': NeuralValuator}
 
 
-class State(object):
+class State:
     def __init__(self, board=None):
         if board is None:
             self.board = chess.Board()
@@ -27,8 +27,8 @@ class State(object):
 
     def serialize(self, turn: bool = False):
         """
-        Vector of 768 (= 8*8*12) with 1 if piece k in position j + positions * k,
-        with j in [1, 64], k in [1, 12], else 0.
+        Tensor of 12 x 64 dimensions (=12 x (8 x 8)) with 1 if piece k in position i,
+        with i in [1, 64], else 0.
 
         Note that Turn is False if it's white and True if it's black.
         """
@@ -61,8 +61,8 @@ class State(object):
             x[idx] = piece_state
         return x
 
-    def _init_valuator(self, valuator_name, model_file=None):
+    @staticmethod
+    def _init_valuator(valuator_name, model_file=None):
         if valuator_name == 'BaselineValuator':
             return _VALUATORS[valuator_name]()
-        else:
-            return _VALUATORS[valuator_name](model_file)
+        return _VALUATORS[valuator_name](model_file)

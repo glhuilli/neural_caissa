@@ -5,7 +5,7 @@ This is yet another attempt to build a neural network improved chess bot, which 
 How to play
 -----
 
-First you need to setup your virtual environment (maybe following [my recommended strategy](https://glhuilli.github.io/virtual-environments.html)).
+First you need to setup your virtual environment (maybe following [this recommended strategy](https://glhuilli.github.io/virtual-environments.html)).
 
 Once this is ready, you can install all dependencies by just running, 
 
@@ -51,7 +51,7 @@ value = SUM(piece in white)
 
 The neural `valuator` is a scoring function trained using a deep learning. This function is built using a series of ConvNets, which are then mapped into a linear representation and evaluated using a `tanh` into [-1, +1], using Adam as optimizer and MSE as the loss function, mini-batches of size 256, and 100 epochs to train.  
 
-The data used to train this model is a large collection of games, where the features are determined by a very simple and naive serialization strategy: each state is represented as a Tensor of with 768 binary variables (= 12 x (8 x 8)). For each piece k (k \in [1, 12]), there's a 1 if piece k in position i else 0 (i \in [1, 64]). The target label is either +1 or -1 depending on whether the player that is moving in given state won the game or not. 
+The data used to train this model is a large collection of games, where the features are determined by a very simple and naive serialization strategy: each state is represented as a Tensor with binary variables (12 x (8 x 8) variables). For each piece k (k \in [1, 12]), there's a 1 if piece k in position i else 0 (i \in [1, 64]). The target label is either +1 or -1 depending on whether the player that is moving in given state won the game or not. 
 
 The data used to train this model was downloaded from [caissabase](http://caissabase.co.uk/). 
 

@@ -51,9 +51,40 @@ value = SUM(piece in white)
 
 The neural `valuator` is a scoring function trained using a deep learning. This function is built using a series of ConvNets, which are then mapped into a linear representation and evaluated using a `tanh` into [-1, +1], using Adam as optimizer and MSE as the loss function, mini-batches of size 256, and 100 epochs to train.  
 
-The data used to train this model is a large collection of games, where the features are determined by a very simple and naive serialization strategy: each state is represented as a Tensor with binary variables (12 x (8 x 8) variables). For each piece k (k \in [1, 12]), there's a 1 if piece k in position i else 0 (i \in [1, 64]). The target label is either +1 or -1 depending on whether the player that is moving in given state won the game or not. 
+To train this model, a large collection of games where the features are determined by a very simple and naive serialization strategy: each state is represented as a Tensor with binary variables (12 x (8 x 8) variables). For each piece k (k \in [1, 12]), there's a 1 if piece k in position i else 0 (i \in [1, 64]). The target label is either +1 or -1 depending on whether the player that is moving in given state won the game or not. 
 
 The data used to train this model was downloaded from [caissabase](http://caissabase.co.uk/). 
+
+A more detailed description of the model is summarized in the following table:
+
+```
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1             [-1, 16, 8, 8]           1,744
+            Conv2d-2             [-1, 16, 8, 8]           2,320
+            Conv2d-3             [-1, 32, 3, 3]           4,640
+            Conv2d-4             [-1, 32, 3, 3]           9,248
+            Conv2d-5             [-1, 32, 3, 3]           9,248
+            Conv2d-6             [-1, 64, 1, 1]          18,496
+            Conv2d-7             [-1, 64, 2, 2]          16,448
+            Conv2d-8             [-1, 64, 3, 3]          16,448
+            Conv2d-9            [-1, 128, 1, 1]          32,896
+           Conv2d-10            [-1, 128, 1, 1]          16,512
+           Conv2d-11            [-1, 128, 1, 1]          16,512
+           Conv2d-12            [-1, 128, 1, 1]          16,512
+           Linear-13                    [-1, 1]             129
+================================================================
+Total params: 161,153
+Trainable params: 161,153
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.00
+Forward/backward pass size (MB): 0.03
+Params size (MB): 0.61
+Estimated Total Size (MB): 0.65
+----------------------------------------------------------------
+```
 
 
 List of TODOs 

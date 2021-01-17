@@ -46,6 +46,13 @@ and then you can load the next puzzle from the UI available at,
 http://127.0.0.1:9000/
 ```
 
+You can follow the runtime logs from the service and the web app by tailing the `record_puzzle.log` file:
+
+```bash
+tail -f record_puzzle.log 
+```
+
+
 How does it work
 -----
 

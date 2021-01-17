@@ -2,7 +2,7 @@
 
 This is yet another attempt to build a neural network improved chess bot, which I named `neural caissa` (Caissa is the [goddess of Chess](https://en.wikipedia.org/wiki/Ca%C3%AFssa)). The following neural chess explorations were **heavily** inspired by George Hotz's [Twichchess](https://github.com/geohot/twitchchess).
 
-How to play
+How to play Chess
 -----
 
 First you need to setup your virtual environment (maybe following [this recommended strategy](https://glhuilli.github.io/virtual-environments.html)).
@@ -29,6 +29,21 @@ You can follow the runtime logs from the service and the web app by tailing the 
 
 ```bash
 tail -f record.log 
+```
+
+How to play Chess Puzzles
+----
+
+You can also play "chess puzzles", where given a file with existing games it renders a game two movements before checkmate for you to finish. If you can't finish in the two moves, you'll be able to keep playing with the computer from that point forward. For now, a pre-loaded set of games are loaded by default, but you can modify the code to include your own set of games. You'll be given the option to load your own files in future versions of this code.  
+   
+```bash
+python run_puzzle.py
+```
+
+and then you can load the next puzzle from the UI available at, 
+
+```bash
+http://127.0.0.1:9000/
 ```
 
 How does it work

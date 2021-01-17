@@ -16,7 +16,8 @@ logging.basicConfig(filename='record_puzzle.log',
 app = Flask(__name__)
 
 # TODO: Allow passing down the file with data from the web UI
-puzzle_state = PuzzleState(games_dataset_path=os.path.join(_FILE_PATH, '../data/raw_data/100k_caissadb_data.pgn'))
+puzzle_state = PuzzleState(
+    games_dataset_path=os.path.join(_FILE_PATH, '../data/raw_data/100k_caissadb_data.pgn'))
 
 
 @app.route("/move_coordinates")

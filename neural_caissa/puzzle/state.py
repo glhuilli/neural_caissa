@@ -14,14 +14,14 @@ class PuzzleState(State):
         self.puzzles = []
 
     def set_puzzle(self):
-        logger.debug(f'PUZZLES: {self.puzzles}')
+        logger.debug(f'Reviewed Puzzles: {self.puzzles}')
         black_wins = True
         with open(self.games_dataset_path, 'r') as pgn:
             game_idx = 0
             while black_wins:
                 game = chess.pgn.read_game(pgn)
                 if not game:
-                    logger.debug('No more games.')
+                    logger.debug("Done! You've completed all potential puzzles in this dataset.")
                     break
 
                 if self._valid_game(game, game_idx):
@@ -44,10 +44,8 @@ class PuzzleState(State):
         Game is not None, white wins, there were no more legal moves for the black, and
         game_idx not in the already reviewed puzzles.
         """
-        return game \
-               and game.headers['Result'] == '1-0' \
-               and self._no_more_legal_moves(game) \
-               and game_idx not in self.puzzles
+        return game and game.headers['Result'] == '1-0' and self._no_more_legal_moves(
+            game) and game_idx not in self.puzzles
 
     @staticmethod
     def _no_more_legal_moves(game):

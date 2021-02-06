@@ -4,7 +4,7 @@ setup(
       name='neural_caissa',
       version='0.0.2',
       description='Python package for Chess playing.',
-      url='https://github.com/glhuilli/ah_heh_drehs',
+      url='https://github.com/glhuilli/neural_caissa',
       author="Gaston L'Huillier",
       author_email='glhuilli@gmail.com',
       license='MIT License',
